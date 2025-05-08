@@ -33,8 +33,8 @@ WHERE post_id = ?
         connection.query(tagSql, [id], (err, tagResults) => {
             if (err) return res.status(500).json({ error: 'Database query failed' });
 
-
-            post.tag = tagResults;
+            // creato map per avere un array di label invece che un array di oggetti
+            post.tag = tagResults.map(tag => tag.label);
             res.json(post);
         });
     });

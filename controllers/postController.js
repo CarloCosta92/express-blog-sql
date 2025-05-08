@@ -1,28 +1,16 @@
-const posts = require("../data/posts.js")
+// const posts = require("../data/posts.js")
 const connection = require("../data/db.js")
 
-const index = (req, res) => {
-    const check = req.query.tag;
-
-    if (check) {
-        // Filtra i post per tag
-        const checkedPosts = posts.filter((post) =>
-            post.tags.some((tag) => tag === check)
-        );
-        if (checkedPosts.length === 0) {
-            return res.status(404).json({
-                error: "not Found",
-                messaggio: "Nessun post trovato ",
-            });
-        }
-
-        res.json(checkedPosts); //stampa quelli trovati
-
-    } else {
-        res.json(posts); //stampa tutto
-    }
-    // res.send('Lista dei post');
-};
+// Index
+function index(req, res) {
+    // query
+    const sql = 'SELECT * FROM posts';
+    // esecuzione
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        res.json(results);
+    })
+}
 
 const show = (req, res) => {
 

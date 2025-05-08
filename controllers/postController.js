@@ -12,24 +12,17 @@ function index(req, res) {
     })
 }
 
-const show = (req, res) => {
+function show(req, res) {
+    // recuperiamo l'id dall' URL
+    const id = req.params.id
 
-    // validazione
-    if (req.params.id) {
+    const sql = 'SELECT * FROM posts WHERE id = ?';
 
-        const postId = parseInt(req.params.id);
-        const post = posts.find(post => post.id === postId);
-
-        if (!post) {
-            return res.status(404).json({
-                error: "not found",
-                messaggio: "ricetta non trovata"
-            });
-        }
-
-        // res.send('Dettagli di un post');
-        res.status(200).json(post);
-    }
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        if (results.length === 0) return res.status(404).json({ error: 'posts not found' });
+        res.json(results[0]);
+    });
 };
 
 // const store = (req, res) => {
